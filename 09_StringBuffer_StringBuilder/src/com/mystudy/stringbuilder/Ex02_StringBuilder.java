@@ -1,18 +1,20 @@
+package com.mystudy.stringbuilder;
 
 
-public class Ex01_StringBuffer {
+public class Ex02_StringBuilder {
 
 	public static void main(String[] args) {
-		// StringBuffer 클래스
-		StringBuffer sb = new StringBuffer("Hello Java!!!");
+		// StringBuilder 클래스
+		
+		StringBuilder sb = new StringBuilder("Hello Java!!!");
 		System.out.println("sb : " + sb);
 		System.out.println("sb.toString() : " + sb.toString());
 		System.out.println("sb.length() : " + sb.length());
 		System.out.println("sb.capacity() : " + sb.capacity());
 		
-		System.out.println("--- StringBuffer : 데이터 변경 가능 ----");
+		System.out.println("--- StringBuilder : 데이터 변경 가능 ----");
 		System.out.println("sb.toString() : " + sb.toString());
-		StringBuffer appendReturn = sb.append(" 반갑습니다").append("~~~~"); //맨 뒤에 추가
+		StringBuilder appendReturn = sb.append(" 반갑습니다").append("~~~~"); //맨 뒤에 추가
 		
 		System.out.println("append 후 sb : " + sb.toString());
 		System.out.println("appendReturn : " + appendReturn);
@@ -27,7 +29,7 @@ public class Ex01_StringBuffer {
 		
 		System.out.println("---- delete(), insert(), replace() ------");
 		//Hello Java!!! 반갑습니다~~~~
-		//delete() 메소드 리턴값 : StringBuffer 데이터(현재 작업중인 StringBuffer 객체)
+		//delete() 메소드 리턴값 : StringBuilder 데이터(현재 작업중인 StringBuilder 객체)
 		System.out.println("sb.delete(0, 6) : " + sb.delete(0, 6));
 		System.out.println("sb : " + sb.toString());
 		
@@ -41,7 +43,7 @@ public class Ex01_StringBuffer {
 		System.out.println("sb.capacity() : " + sb.capacity());
 		System.out.println("----------------");
 		
-		StringBuffer sb2 = new StringBuffer(100);
+		StringBuilder sb2 = new StringBuilder(100);
 		System.out.println("sb2.length() : " + sb2.length());
 		System.out.println("sb2.capacity() : " + sb2.capacity());
 		
