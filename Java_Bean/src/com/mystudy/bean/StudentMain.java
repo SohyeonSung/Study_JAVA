@@ -41,7 +41,7 @@ public class StudentMain {
 		System.out.println("stu2 : " + stu2);
 		
 		
-		System.out.println("COMMIT TEST");
+
 		
 	}
 
