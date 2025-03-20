@@ -54,10 +54,6 @@ public class StudentVO {
 	}
 
 	//국어
-	public int getKor() {
-		return kor;
-	}
-
 	public void setKor(int kor) {
 		if (kor >= 0 && kor <= 100) {
 			this.kor = kor;
@@ -67,11 +63,13 @@ public class StudentVO {
 		setTotAvg();
 	}
 
-	//영어
-	public int getEng() {
-		return eng;
+	
+	public int getKor() {
+		return kor;
 	}
-
+	
+	
+	//영어
 	public void setEng(int eng) {
 		if (eng >= 0 && eng <= 100) {
 			this.eng = eng;
@@ -79,12 +77,13 @@ public class StudentVO {
 			System.out.println("점수를 다시 입력해주세요");
 		}
 	}
-
-	//수학
-	public int getMath() {
-		return math;
+	
+	public int getEng() {
+		return eng;
 	}
 
+
+	//수학
 	public void setMath(int math) {
 		if (math >= 0 && math <= 100) {
 			this.math = math;
@@ -92,6 +91,11 @@ public class StudentVO {
 			System.out.println("점수를 다시 입력해주세요");
 		}
 	}
+	
+	public int getMath() {
+		return math;
+	}
+
 	
 	//총점
 	public int getTot() {
@@ -101,6 +105,11 @@ public class StudentVO {
 	//평균
 	public double getAvg() {
 		return avg;
+	}
+	
+	
+	public void setTot (int tot) {
+		this.tot = tot;
 	}
 
 	private void setTotAvg() {
