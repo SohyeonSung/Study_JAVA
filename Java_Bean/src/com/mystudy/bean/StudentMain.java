@@ -40,6 +40,9 @@ public class StudentMain {
 		//stu2.computeTotAvg();
 		System.out.println("stu2 : " + stu2);
 		
+		
+		System.out.println("COMMIT TEST");
+		
 	}
 
 }
