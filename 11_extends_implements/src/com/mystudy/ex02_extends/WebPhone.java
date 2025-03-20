@@ -27,7 +27,7 @@ package com.mystudy.ex02_extends;
 		//메소드 (기능) -----
 		
 		public void webSearch() {
-			System.out.println(">>WebPhone - 웹 검색");
+			System.out.println(">> WebPhone - 웹 검색");
 		}
 		
 		

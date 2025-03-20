@@ -10,7 +10,7 @@ class PhoneTest {
 		ph1.call();
 		ph1.receiveCall();
 		
-		System.out.println("=== Mp3Phone ====");
+		System.out.println("=== Mp3 Phone ====");
 		Mp3Phone ph2 = new Mp3Phone("삼성갤럭시", "010-2222-2222");
 		ph2.view();
 		ph2.call();
@@ -18,7 +18,7 @@ class PhoneTest {
 		
 		ph2.playMusic();
 		
-		System.out.println("=== WebPhone ====");
+		System.out.println("=== Web Phone ====");
 		WebPhone ph3 = new WebPhone("애플아이폰", "010-3333-3333");
 		ph3.view();
 		ph3.call();
@@ -26,7 +26,14 @@ class PhoneTest {
 		
 		ph3.webSearch();
 		
+		System.out.println("=== Web+Mp3 Phone ===");
+		WebMp3Phone ph4 = new WebMp3Phone ("메가폰", "010-4444-4444");
+		ph4.view();
+		ph4.call();
+		ph4.receiveCall();
 		
+		ph4.playMusic();
+		ph4.webSearch();
 
 	}
 
