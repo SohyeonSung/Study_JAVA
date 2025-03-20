@@ -18,6 +18,14 @@ class PhoneTest {
 		
 		ph2.playMusic();
 		
+		System.out.println("=== WebPhone ====");
+		WebPhone ph3 = new WebPhone("애플아이폰", "010-3333-3333");
+		ph3.view();
+		ph3.call();
+		ph3.receiveCall();
+		
+		ph3.webSearch();
+		
 		
 
 	}

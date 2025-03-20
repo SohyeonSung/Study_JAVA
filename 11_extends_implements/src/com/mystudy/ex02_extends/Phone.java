@@ -41,6 +41,7 @@ class Phone { // extends Object 생략 사용 가능
 	public void view() {
 		System.out.println("Phone>>타입: " + type + ", 전화번호: " + phoneNo);
 	}
+	
 
 	
 }
