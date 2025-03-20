@@ -1,0 +1,50 @@
+﻿상속(Inheritance)
+상위클래스 : 수퍼(super)클래스, 부모(parent)클래스 - 상속의 대상이 되는 클래스
+하위클래스 : 서브(sub)클래스, 자녀(child)클래스 - 상속받아서 추가 확장 구현한 클래스
+
+extends(확장) : 동일한 타입간에 확장해서 사용할 때 사용(단일 상속만 허용)
+  - extends 문 좌,우에 동일한 타입(class, interface)이 와야한다.
+  - class extends class, interface extends inteface
+
+implements(구현/실체화) : 인터페이스(interface) 구현해서 사용할 때 사용 
+  - class implements interface (,interface, inteface...)
+  
+---------------------------------
+자바에서는 클래스 상속(extends)은 단일상속만 허용
+클래스 extends 클래스 {}
+클래스 implements 인터페이스, 인터페이스, ..., 인터페이스
+클래스 extends 클래스 implements 인터페이스, 인터페이스, ..., 인터페이스
+
+인터페이스 extends 인터페이스
+인터페이스 extends 인터페이스, 인터페이스, ..., 인터페이스
+
+//======================================
+/*
+[1] 상속(inheritance)이란?
+    부모 클래스가 가지고 있는 속성(변수)들과 기능(메소드)들을 그대로 물려받아
+    새로운 클래스를 만드는 것.
+    - 원본 클래스 : 부모클래스(Parent class), 슈퍼클래스(Super class), 기초/기반 클래스(Base class)  
+    - 만들어진 클래스 : 자식클래스(Child class), 서브/하위클래스(Sub class), 파생 클래스(Derived class)
+ 
+[2] 상속의 장점 - 재활용성
+    부모에 정의된 멤버필드(변수)나 메소드들을 그대로 상속받아 사용
+    상속받은 메소드라 해도 필요에 따라서 자식 클래스에서 용도를 변경해서 사용(method overriding)
+         
+[3] 상속의 사용
+    - 생성자, 초기화 블럭은 상속이 안됨.
+    - 부모 클래스의 접근제한자가 private인 경우 자식 클래스가 상속을 받았어도 접근 불가능.                                    
+*/ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
