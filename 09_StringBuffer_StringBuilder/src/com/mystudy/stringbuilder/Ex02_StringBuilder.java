@@ -1,11 +1,9 @@
 package com.mystudy.stringbuilder;
 
-
 public class Ex02_StringBuilder {
 
 	public static void main(String[] args) {
 		// StringBuilder 클래스
-		
 		StringBuilder sb = new StringBuilder("Hello Java!!!");
 		System.out.println("sb : " + sb);
 		System.out.println("sb.toString() : " + sb.toString());

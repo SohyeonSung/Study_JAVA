@@ -1,11 +1,9 @@
 package com.mystudy.stringbuilder;
 
-
 public class Ex01_StringBuffer {
 
 	public static void main(String[] args) {
-		// StringBuffer 클래스 : 쓰레드(Thread)에서 안전하게 사용
-		
+		// StringBuffer 클래스 : 쓰레드(Thread)에서 안전하게 사용 가능
 		StringBuffer sb = new StringBuffer("Hello Java!!!");
 		System.out.println("sb : " + sb);
 		System.out.println("sb.toString() : " + sb.toString());
