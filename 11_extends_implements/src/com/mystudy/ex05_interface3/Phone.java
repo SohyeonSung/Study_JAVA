@@ -28,8 +28,14 @@ interface Phone {
 	// public default 메소드 ----------------------------------
 	// 구현 클래스에서 구현을 해도 되고 안해도 되는 메소드(기능)
 	// 재정의해서 사용할 경우만 구현하면 됨
+	
+	//	default void ddefaulMethod() {
+	//		System.out.println("Phone 인터페이스의 defaultMethod 메소드 실행");
+
+
+
 	default void defaultMethod() {
-		System.out.println("Phnoe 인터페이스의 defaultMethod 메소드 실행");
+		System.out.println("Phone 인터페이스의 defaultMethod 메소드 실행");
 		
 	}
 	
