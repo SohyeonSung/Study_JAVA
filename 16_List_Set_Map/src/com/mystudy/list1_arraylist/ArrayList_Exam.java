@@ -86,16 +86,49 @@ public class ArrayList_Exam {
 		for (Integer data : list) {
 			System.out.println(data);
 		}
-		
-		
-		System.out.println(" --- 전체 데이터 삭제 ---");
-		//list.clear();
+	
 
-		System.out.println("원래 list : " + list);
+		System.out.println("--- 전체 데이터 삭제 1 (반복문 이용) ---");
+		//list.clear();
+		System.out.println("삭제전 list : " + list);
+		System.out.println("삭제전 갯수 : " + list.size());
+		
+//		for (int i = 0; i < list.size(); i++) {
+//			System.out.println("i : " + i + ", size : " + list.size() + ", i값: " + list.get(i));
+//			list.remove(i);
+//		}
+//		
+		
+		while (list.size() > 0) {
+			System.out.println("list : " + list);
+			//list.remove(0);
+			list.remove(list.size() - 1);
+		}
+
+		
+		
+		
+		
+		System.out.println("삭제후 list : " + list);
+		System.out.println("삭제후 갯수 : " + list.size());
+		
+		
+		
+		
+		
+		
+
+		
+		System.out.println();
+		System.out.println("--- 전체 데이터 삭제 2 (반복문 이용 / 내가) ---");
+
+		System.out.println("삭제전 list : " + list);
 		for (int i = list.size() - 1; i >= 0; i--) {
 			list.remove(i);
 		}
-		System.out.println("삭제된 list : " + list);
+		System.out.println("삭제후 list : " + list);
+		
+		
 		
 	}
 
