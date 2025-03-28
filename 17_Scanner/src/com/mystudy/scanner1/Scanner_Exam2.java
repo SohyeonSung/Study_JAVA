@@ -62,6 +62,20 @@ public class Scanner_Exam2 {
         System.out.println();
         System.out.println();
         
+        
+        //지속 여부
+        System.out.println(" : : 계속하시겠습니까? (Y/N)");
+        
+        String answer = scan.nextLine();
+		if ("y".equalsIgnoreCase(answer)) {
+			System.out.println("성적처리를 중단합니다~~~");
+			break;
+		}
+
+			
+
+        
+        
 		}   
        
 		
