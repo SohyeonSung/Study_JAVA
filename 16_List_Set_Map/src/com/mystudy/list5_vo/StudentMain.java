@@ -29,9 +29,6 @@ public class StudentMain {
 		5. 전체 데이터 화면 출력(3번 형식으로)
 		***********************************/
 		
-		
-		
-
 		//2
 		ArrayList<StudentVO> list = new ArrayList <>();
 		
@@ -39,9 +36,13 @@ public class StudentMain {
 		list.add(new StudentVO("A01", "김유신", 100, 90, 81));
 		list.add(new StudentVO("A02", "이순신", 95, 88, 92));
 		list.add(new StudentVO("A03", "홍길동", 90, 87, 77));
-
 		
 		//3
+		for (StudentVO student : list) {
+			System.out.println(student);
+		}
+		
+		//4
 		System.out.println("");
 		System.out.println("[A01 데이터만 출력]");
 		for (StudentVO student : list) {
@@ -57,7 +58,7 @@ public class StudentMain {
 		}
 		
 		
-		//4
+		//5
 		System.out.println("");
 		System.out.println("[전체 데이터 출력]");
 		System.out.println("학번\t성명\t국어\t영어\t수학\t총점\t평균");

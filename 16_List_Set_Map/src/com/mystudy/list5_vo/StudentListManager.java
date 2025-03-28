@@ -1,6 +1,6 @@
 package com.mystudy.list5_vo;
 
-
+import java.util.List;
 
 /*
 성적처리를 위한 관리용 클래스를 생성 CRUD 기능을 구현하고 확인하시오
@@ -24,9 +24,79 @@ package com.mystudy.list5_vo;
 
 public class StudentListManager {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	    List<StudentVO> studentList;
 
+	    public StudentListManager(List<StudentVO> studentList) {
+	        this.studentList = studentList;
+	    }
+
+	    public List<StudentVO> selectAll() {
+	        return studentList;
+	    }
+
+	    public StudentVO select(String id) {
+	        for (StudentVO student : studentList) {
+	            if (student.getId().equals(id)) {
+	                return student;
+	            }
+	        }
+	        return null;
+	    }
+
+	    public StudentVO select(StudentVO student) {
+	        return select(student.getId());
+	    }
+
+	    boolean insert(StudentVO student) {
+	        if (select(student.getId()) == null) {
+	            studentList.add(student);
+	            return true; 
+	        }
+	        return false; 
+	    }
+
+	    boolean update(StudentVO student) {
+	        StudentVO existingStudent = select(student);
+	        if (existingStudent != null) {
+	            existingStudent.setKor(student.getKor());
+	            existingStudent.setEng(student.getEng());
+	            existingStudent.setMath(student.getMath());
+	            return true; 
+	        }
+	        return false; 
+	    }
+
+	    boolean updateName(String id, String name) {
+	        StudentVO student = select(id);
+	        if (student != null) {
+	            student.setName(name);
+	            return true;
+	        }
+	        return false; 
+	    }
+
+
+	    boolean updateKor(String id, int kor) {
+	        StudentVO student = select(id);
+	        if (student != null) {
+	            student.setKor(kor);
+	            return true;
+	        }
+	        return false;
+	    }
+
+	    boolean delete(StudentVO student) {
+	        return delete(student.getId());
+	    }
+
+	    boolean delete(String id) {
+	        StudentVO student = select(id);
+	        if (student != null) {
+	            studentList.remove(student);
+	            return true;
+	        }
+	        return false; 
+	    }
 	}
 
-}
+

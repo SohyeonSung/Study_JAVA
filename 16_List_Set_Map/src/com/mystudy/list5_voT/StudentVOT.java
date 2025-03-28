@@ -1,7 +1,7 @@
-package com.mystudy.list5_vo;
+package com.mystudy.list5_voT;
 
-public class StudentVO {
-	private String id; 
+public class StudentVOT {
+	private String id; //학생 고유 번호
 	private String name;
 	private int kor;
 	private int eng;
@@ -9,7 +9,12 @@ public class StudentVO {
 	private int tot;
 	private double avg;
 	
-	public StudentVO(String id, String name, int kor, int eng, int math) {
+	public StudentVOT(String id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
+	public StudentVOT(String id, String name, int kor, int eng, int math) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -78,22 +83,16 @@ public class StudentVO {
 	public void computeTotAvg() {
 		tot = kor + eng + math;
 		avg = tot * 100 / 3 / 100.0;
+	}
+
+	@Override
+	public String toString() {
+		return "StudentVOT [id=" + id + ", name=" + name + ", kor=" + kor + ", eng=" + eng + ", math=" + math + ", tot="
+				+ tot + ", avg=" + avg + "]";
 	}	
 	
-	// toString 메서드 추가
-    @Override
-    public String toString() {
-        return "StudentVO{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", kor=" + kor +
-                ", eng=" + eng +
-                ", math=" + math +
-                ", tot=" + tot +
-                ", avg=" + avg +
-                '}';
-	
-	
+
 
 }
-}
+
+
