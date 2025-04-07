@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Map;
 
 // == 멀티채팅 서버측 기능 ==
 // 읽기전용 스레드 : 클라이언트로부터 받은 메세지를 읽고, 접속자 전체에게 메세지 전송
@@ -16,7 +17,7 @@ import java.util.HashMap;
 // 받은 메세지를 접속자 전체에게 전송하는 기능
 
 public class TCPServerMultiChat {
-	private HashMap<String, DataOutputStream> clients; //접속자 명단(별칭, 출력객체)
+	private Map<String, DataOutputStream> clients; //접속자 명단(별칭, 출력객체)
 
 	public TCPServerMultiChat() {
 		clients = new HashMap<String, DataOutputStream>();
@@ -126,8 +127,3 @@ public class TCPServerMultiChat {
 	}
 
 }
-
-
-
-
-

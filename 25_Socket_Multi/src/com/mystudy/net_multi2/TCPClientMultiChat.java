@@ -9,7 +9,6 @@ import java.util.Scanner;
 // 메세지를 보내고 싶을 때 보내고, 서버에서 보낸 메세지를 언제든지 받기
 // 쓰기 전용 스레드 : 메세지 작성 및 전송을 독립적으로 처리 (언제든지 메세지 보내기)
 // 읽기 전용 스레드 : 서버쪽으로부터 받은 메세지를 읽어서 화면 출력 (언제든지 읽기)
-
 public class TCPClientMultiChat {
 
 	public void start() {
@@ -17,7 +16,8 @@ public class TCPClientMultiChat {
 		Socket socket = null;
 		
 		try {
-			socket = new Socket("localhost", 10000);
+			//socket = new Socket("localhost", 10000);
+			socket = new Socket("192.168.18.26", 10000);
 			System.out.println(":: 서버 접속 성공");
 			
 			//메시지 전송 쓰레드 만들기
@@ -113,4 +113,6 @@ public class TCPClientMultiChat {
 	
 
 }
+
+
 
