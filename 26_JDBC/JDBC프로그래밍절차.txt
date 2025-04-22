@@ -1,0 +1,44 @@
+오라클 JDBC 드라이버 등록해서 개발 환경 설정
+
+1. 오라클 JDBC 드라이버 찾기 - 웹에서 찾아서 사용
+  - SQL Developer 설치위치에서 찾기
+	C:\MyStudy\util\sqldeveloper-23.1.1.345.2114-x64\sqldeveloper\jdbc\lib\ojdbc11.jar
+  - 오라클 DBMS 설치 위치에서 찾기
+    C:\oraclexe\app\oracle\product\11.2.0\server\jdbc\lib\ojdbc6.jar
+
+  ▶ ojdbc 다운로드 링크
+    https://www.oracle.com/kr/database/technologies/appdev/jdbc-downloads.html
+    
+2. 프로젝트에 복사하기
+   ojdbc8.jar 파일을 lib 폴더(디렉토리) 만들고 복사하기 
+
+3. 라이브러리를 사용할 수 있도록 빌드패스에 등록
+3-1. 프로젝트 선택후 우클릭 > build path 선택 > configure build path 선택
+3-2. <Libraries> 탭에서 우측에 있는 [Add JARs..] 버튼 클릭해서
+   	ojdbc8.jar 파일이 있는 위치(프로젝트 > lib)에서 ojdbc8.jar 선택 등록
+
+4. JDBC 프로그래밍 절차에 따라 소스 코드 작성
+
+//------------------------------------------------
+//JDBC 이용한 DB 연동 프로그래밍 작성 절차
+//0. JDBC 라이브러리 개발환경 설정(빌드경로에 등록)
+//1. JDBC 드라이버 로딩
+//2. DB연결 - Connection 객체 생성 <- DriverManager
+//3. Statement 문 실행(SQL 문 실행)
+//4. SQL 실행 결과에 대한 처리
+//   - SELECT : 조회(검색) 데이터 결과 값에 대한 처리
+//   - INSERT, UPDATE, DELETE : int 값(건수) 처리
+//5. 클로징 처리에 의한 자원 반납
+
+
+
+
+
+
+
+
+
+
+
+
+   	
