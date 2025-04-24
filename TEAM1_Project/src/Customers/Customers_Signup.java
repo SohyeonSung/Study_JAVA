@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.Scanner;
+import Customers.Customers_DAO;
 
 public class Customers_Signup {
     public void signup() {
@@ -18,29 +19,23 @@ public class Customers_Signup {
 
         System.out.print("이름 입력: ");
         String name = sc.nextLine();
+        
+        
+        
+     // DTO 객체 생성
+        Customers customers = new Customers();
+        customers.setUsername(username);
+        customers.setPassword(password);
+        customers.setCustomerName(name);
 
-        try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-            Connection conn = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:xe", "TEAM1", "team1");
+        // DAO 호출
+        Customers_DAO dao = new Customers_DAO();
+        boolean result = dao.insertCustomer(customers);
 
-            String sql = "INSERT INTO CUSTOMERS (customerId, username, password, customerName) VALUES (CUSTOMERS_SEQ.NEXTVAL, ?, ?, ?)";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
-            pstmt.setString(3, name);
-
-            int result = pstmt.executeUpdate();
-            if (result > 0) {
-                System.out.println("✅ 회원가입이 완료되었습니다!");
-            } else {
-                System.out.println("❌ 회원가입 실패!");
-            }
-
-            pstmt.close();
-            conn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (result) {
+            System.out.println("✅ 회원가입이 완료되었습니다!");
+        } else {
+            System.out.println("❌ 회원가입 실패!");
         }
     }
 }
