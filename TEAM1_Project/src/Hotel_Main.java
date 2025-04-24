@@ -1,7 +1,7 @@
 import java.util.Scanner;
 import Customers.Customers_Login;
 import Customers.Customers_Signup;
-import Manager.ManagerMain;
+import Manager.Manager_Main;
 
 public class Hotel_Main {
     public static void main(String[] args) {
@@ -22,7 +22,7 @@ public class Hotel_Main {
                 switch (choice) {
                     case 1:
                         System.out.println("\n[관리자 모드]");
-                        ManagerMain manager = new ManagerMain();
+                        Manager_Main manager = new Manager_Main();
                         manager.runManager(); // 관리자 기능 실행
                         break;
 

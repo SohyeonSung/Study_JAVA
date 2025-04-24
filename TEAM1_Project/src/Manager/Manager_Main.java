@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import Room.Room_DAO;
 
-public class ManagerMain {
+public class Manager_Main {
 
     public void runManager() {
         Scanner sc = new Scanner(System.in);
