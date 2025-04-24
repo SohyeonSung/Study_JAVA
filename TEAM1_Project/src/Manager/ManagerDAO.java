@@ -4,19 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement; 
 import java.sql.ResultSet; 
 import java.sql.SQLException;
-import Util.DBUtil;
 
 public class ManagerDAO {
 
 
 // 로그인 확인
-public boolean login(int managerId, int password) {
+public boolean login(int managerId, String password) {
     String sql = "SELECT * FROM MANAGER WHERE USERNAME = ? AND PASSWORD = ?";
     try (Connection conn = DBConnection.getConnection();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
         pstmt.setInt(1, managerId);
-        pstmt.setInt(2, password);
+        pstmt.setString(2, password);
 
         try (ResultSet rs = pstmt.executeQuery()) {
             return rs.next(); // 로그인 성공 시 true
@@ -24,7 +23,7 @@ public boolean login(int managerId, int password) {
     } catch (SQLException e) {
         e.printStackTrace();
     }
-    return false;
+    return true;
 }
 
 // 관리자 등록
@@ -82,9 +81,9 @@ public boolean isUsernameTaken(String username) {
     return false;
 }
 
-public boolean login(int managerId, String managerPw) {
-	// TODO Auto-generated method stub
-	return true;
-}
+//public boolean login(int managerId, String managerPw) {
+//	// TODO Auto-generated method stub
+//	return true;
+//}
 
 }
