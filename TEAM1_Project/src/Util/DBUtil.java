@@ -13,14 +13,25 @@ public class DBUtil {
     static {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
-//            System.out.println(">> Oracle JDBC 드라이버 로딩 성공");
         } catch (ClassNotFoundException e) {
-//            System.out.println("⚠️ 드라이버 로딩 실패");
             e.printStackTrace();
         }
     }
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
+
+    // 🔄 추가: 자원 자동 해제 메서드
+    public static void close(AutoCloseable... resources) {
+        for (AutoCloseable res : resources) {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

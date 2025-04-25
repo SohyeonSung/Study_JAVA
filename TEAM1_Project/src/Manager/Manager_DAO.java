@@ -4,14 +4,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement; 
 import java.sql.ResultSet; 
 import java.sql.SQLException;
+import Util.DBUtil;
+import java.sql.DriverManager;
 
-public class ManagerDAO {
+public class Manager_DAO {
 
 
 // 로그인 확인
 public boolean login(int managerId, String password) {
     String sql = "SELECT * FROM MANAGER WHERE USERNAME = ? AND PASSWORD = ?";
-    try (Connection conn = DBConnection.getConnection();
+    try (Connection conn = DBUtil.getConnection();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
         pstmt.setInt(1, managerId);
@@ -29,7 +31,7 @@ public boolean login(int managerId, String password) {
 // 관리자 등록
 public boolean insertManager(int managerId, String managerName, String username, String password) {
     String sql = "INSERT INTO MANAGER (MANAGERID, MANAGERNAME, USERNAME, PASSWORD) VALUES (?, ?, ?, ?)";
-    try (Connection conn = DBConnection.getConnection();
+    try (Connection conn = DBUtil.getConnection();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
         pstmt.setInt(1, managerId);
@@ -48,7 +50,7 @@ public boolean insertManager(int managerId, String managerName, String username,
 // 모든 관리자 정보 출력
 public void showAllManagers() {
     String sql = "SELECT * FROM MANAGER ORDER BY MANAGERID";
-    try (Connection conn = DBConnection.getConnection();
+    try (Connection conn = DBUtil.getConnection();
          PreparedStatement pstmt = conn.prepareStatement(sql);
          ResultSet rs = pstmt.executeQuery()) {
 
@@ -68,7 +70,7 @@ public void showAllManagers() {
 // 사용자명 중복 체크
 public boolean isUsernameTaken(String username) {
     String sql = "SELECT 1 FROM MANAGER WHERE USERNAME = ?";
-    try (Connection conn = DBConnection.getConnection();
+    try (Connection conn = DBUtil.getConnection();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
         pstmt.setString(1, username);

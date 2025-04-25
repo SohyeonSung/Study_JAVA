@@ -1,9 +1,9 @@
 import java.util.Scanner;
 import Customers.Customers_Login;
 import Customers.Customers_Signup;
-import Manager.Manager_Main;
+import Manager.Manager;
 
-public class Hotel_Main {
+public class Hotel {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean isRunning = true;
@@ -22,7 +22,7 @@ public class Hotel_Main {
                 switch (choice) {
                     case 1:
                         System.out.println("\n[관리자 모드]");
-                        Manager_Main manager = new Manager_Main();
+                        Manager manager = new Manager();
                         manager.runManager(); // 관리자 기능 실행
                         break;
 

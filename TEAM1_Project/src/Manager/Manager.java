@@ -1,14 +1,17 @@
 package Manager;
 
 import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import Room.Room_DAO;
 
-public class Manager_Main {
+public class Manager {
 
     public void runManager() {
         Scanner sc = new Scanner(System.in);
-        ManagerDAO managerDAO = new ManagerDAO();
+        Manager_DAO managerDAO = new Manager_DAO();
         Room_DAO roomDAO = new Room_DAO();
 
         System.out.print("관리자 ID: ");
