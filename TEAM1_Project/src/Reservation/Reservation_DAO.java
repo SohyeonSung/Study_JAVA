@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class Reservation_DAO {
 
     // 데이터베이스 연결 정보
-    private static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
+    private static final String URL = "jdbc:oracle:thin:@192.168.18.10:1521:xe";
     private static final String USER = "TEAM1";
     private static final String PASSWORD = "team1";
 

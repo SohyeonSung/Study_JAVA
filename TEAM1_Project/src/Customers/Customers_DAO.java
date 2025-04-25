@@ -13,7 +13,7 @@ public class Customers_DAO {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             conn = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:xe", "TEAM1", "team1");
+                "jdbc:oracle:thin:@192.168.18.10:1521:xe", "TEAM1", "team1");
 
             String sql = "INSERT INTO CUSTOMERS (customerId, username, password, customerName) VALUES (CUSTOMERS_SEQ.NEXTVAL, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);

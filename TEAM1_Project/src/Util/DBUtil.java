@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DBUtil {
 
-    private static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
+    private static final String URL = "jdbc:oracle:thin:@192.168.18.10:1521:xe";
     private static final String USER = "TEAM1";  // 본인 계정명
     private static final String PASSWORD = "team1";  // 본인 비밀번호
 

@@ -21,7 +21,7 @@ public class Customers_Login {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             Connection conn = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:xe", "TEAM1", "team1");
+                "jdbc:oracle:thin:@192.168.18.10:1521:xe", "TEAM1", "team1");
 
             String sql = "SELECT * FROM CUSTOMERS WHERE username = ? AND password = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);

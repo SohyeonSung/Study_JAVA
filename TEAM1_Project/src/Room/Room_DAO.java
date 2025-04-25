@@ -11,7 +11,7 @@ import java.util.List;
 import Util.DBUtil;
 
 public class Room_DAO {
-    private static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
+    private static final String URL = "jdbc:oracle:thin:@192.168.18.10:1521:xe";
     private static final String USER = "TEAM1";
     private static final String PASSWORD = "team1";
 
