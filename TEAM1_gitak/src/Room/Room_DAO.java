@@ -16,7 +16,10 @@ public class Room_DAO {
 
     // 전체 객실 목록 조회
     public void getAllRooms() {
-        String sql = "SELECT * FROM ROOM";
+        String sql = "SELECT r.roomNumber, r.roomType, r.roomStatus, t.price " +
+        			"FROM ROOM r " +
+        			"JOIN ROOM_TYPES t ON r.roomType = t.roomType";
+
         
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -27,10 +30,12 @@ public class Room_DAO {
                 int roomNumber = rs.getInt("roomNumber");
                 String roomType = rs.getString("roomType");
                 String roomStatus = rs.getString("roomStatus");
+                int price = rs.getInt("price");
 
                 System.out.println("객실 번호: " + roomNumber +
                                    ", 타입: " + roomType +
-                                   ", 상태: " + roomStatus);
+                                   ", 상태: " + roomStatus +
+                                   ", 가격: " + price + "원");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,7 +44,9 @@ public class Room_DAO {
     
     // 빈 객실 목록 조회
     public void getAvailableRooms() {
-        String sql = "SELECT * FROM ROOM WHERE roomStatus = '빈 객실'";
+        String sql =  "SELECT r.ROOMNUMBER, r.ROOMTYPE, r.ROOMSTATUS, t.PRICE " +
+        			  "FROM ROOM r JOIN ROOM_TYPES t ON r.ROOMTYPE = t.ROOMTYPE " +
+                      "WHERE r.ROOMSTATUS = '빈 객실'";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -52,10 +59,12 @@ public class Room_DAO {
                 int roomNumber = rs.getInt("roomNumber");
                 String roomType = rs.getString("roomType");
                 String roomStatus = rs.getString("roomStatus");
+                int price = rs.getInt("price");
 
                 System.out.println("객실 번호: " + roomNumber +
                                    ", 타입: " + roomType +
-                                   ", 상태: " + roomStatus);
+                                   ", 상태: " + roomStatus +
+                                   ", 가격: " + price + "원");
                 isEmpty = false;
             }
 
@@ -70,7 +79,9 @@ public class Room_DAO {
 
     // 예약된 객실 목록 조회
     public void getOccupiedRooms() {
-        String sql = "SELECT * FROM ROOM WHERE roomStatus = '사용 중'";
+        String sql = "SELECT r.ROOMNUMBER, r.ROOMTYPE, r.ROOMSTATUS, t.PRICE " +
+        			 "FROM ROOM r JOIN ROOM_TYPES t ON r.ROOMTYPE = t.ROOMTYPE " +
+        			 "WHERE r.ROOMSTATUS = '사용 중'";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -83,10 +94,12 @@ public class Room_DAO {
                 int roomNumber = rs.getInt("roomNumber");
                 String roomType = rs.getString("roomType");
                 String roomStatus = rs.getString("roomStatus");
+                int price = rs.getInt("price");
 
                 System.out.println("객실 번호: " + roomNumber +
                                    ", 타입: " + roomType +
-                                   ", 상태: " + roomStatus);
+                                   ", 상태: " + roomStatus +
+                                   ", 가격: " + price + "원");
                 isEmpty = false;
             }
 

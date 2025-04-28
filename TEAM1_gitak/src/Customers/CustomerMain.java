@@ -3,12 +3,14 @@ package Customers;
 import java.sql.Date;
 import java.util.List;
 import java.util.Scanner;
+import Room.Room_DAO;
 
 public class CustomerMain {
 
     public void runCustomer() {
         Scanner sc = new Scanner(System.in);
         CustomerDAO customerDAO = new CustomerDAO();
+	    Room_DAO roomDAO = new Room_DAO(); 
 
         System.out.println("💁‍ 고객 로그인");
         System.out.print("고객 ID: ");
@@ -21,16 +23,21 @@ public class CustomerMain {
 
             while (true) {
                 System.out.println("\n===== 고객 예약 메뉴 =====");
-                System.out.println("1. 예약 조회");
-                System.out.println("2. 예약 생성");
-                System.out.println("3. 예약 수정");
-                System.out.println("4. 예약 취소");
+                System.out.println("1. 전체 객실 조회");
+                System.out.println("2. 예약 조회");
+                System.out.println("3. 예약 생성");
+                System.out.println("4. 예약 수정");
+                System.out.println("5. 예약 취소");
                 System.out.println("0. 종료");
                 System.out.print("선택 > ");
                 int menu = Integer.parseInt(sc.nextLine());
 
                 switch (menu) {
-                    case 1: // ✅ 예약 조회
+                
+                	case 1: // ✅ 객실 조회
+                		roomDAO.getAllRooms();
+	                    break;
+                    case 2: // ✅ 예약 조회
                         List<String> list = customerDAO.getReservationsByCustomer(custId);
                         if (list.isEmpty()) {
                             System.out.println("❗ 예약 내역이 없습니다.");
@@ -39,7 +46,7 @@ public class CustomerMain {
                         }
                         break;
 
-                    case 2: // ✅ 예약 생성
+                    case 3: // ✅ 예약 생성
                         System.out.print("예약번호: ");
                         int newResId = Integer.parseInt(sc.nextLine());
                         System.out.print("방 번호: ");
@@ -59,7 +66,7 @@ public class CustomerMain {
                         }
                         break;
 
-                    case 3: // ✏️ 예약 수정
+                    case 4: // ✏️ 예약 수정
                         System.out.print("수정할 예약번호: ");
                         int updateResId = Integer.parseInt(sc.nextLine());
                         System.out.print("새 체크인 날짜: ");
@@ -77,7 +84,7 @@ public class CustomerMain {
                         }
                         break;
 
-                    case 4: // 🗑️ 예약 취소
+                    case 5: // 🗑️ 예약 취소
                         System.out.print("취소할 예약번호: ");
                         int delId = Integer.parseInt(sc.nextLine());
                         boolean deleted = customerDAO.cancelReservation(delId);
