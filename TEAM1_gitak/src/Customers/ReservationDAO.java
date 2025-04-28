@@ -10,7 +10,7 @@ public class ReservationDAO {
 
     // 예약 생성
     public void createReservation(ReservationDTO reservation) {
-        String sql = "INSERT INTO RESERVATION (CUSTOMER_ID, ROOMNUMBER, CHECKINDATE, CHECKOUTDATE, RESERVATION_STATUS, LAST_MODIFIED) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO RESERVATION (CUSTOMER_ID, ROOMNUMBER, CHECKINDATE, CHECKOUTDATE) VALUES (?, ?, ?, ?)";
 
         String updateRoomSql = "UPDATE ROOM SET ROOMSTATUS = '사용 중' WHERE ROOMNUMBER = ?";
 
@@ -22,8 +22,8 @@ public class ReservationDAO {
             pstmt.setInt(2, reservation.getRoomNumber());
             pstmt.setDate(3, reservation.getCheckInDate());
             pstmt.setDate(4, reservation.getCheckOutDate());
-            pstmt.setString(5, reservation.getReservationStatus());
-            pstmt.setDate(6, reservation.getLastModified());
+//            pstmt.setString(5, reservation.getReservationStatus());
+//            pstmt.setDate(6, reservation.getLastModified());
 
             pstmt.executeUpdate();
 
@@ -37,7 +37,7 @@ public class ReservationDAO {
 
     // 예약 수정
     public void updateReservation(ReservationDTO reservation) {
-        String updateReservationSql = "UPDATE RESERVATION SET CHECKIN_DATE = ?, CHECKOUT_DATE = ?, RESERVATION_STATUS = ?, LAST_MODIFIED = ? WHERE RESERVATION_ID = ?";
+        String updateReservationSql = "UPDATE RESERVATION SET CHECKIN_DATE = ?, CHECKOUT_DATE = ? WHERE RESERVATION_ID = ?";
         String updateRoomSql = "UPDATE ROOM SET ROOMSTATUS = ? WHERE ROOMNUMBER = ?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -49,9 +49,7 @@ public class ReservationDAO {
             // 예약 정보 업데이트
             pstmt.setDate(1, reservation.getCheckInDate());
             pstmt.setDate(2, reservation.getCheckOutDate());
-            pstmt.setString(3, reservation.getReservationStatus());
-            pstmt.setDate(4, reservation.getLastModified());
-            pstmt.setInt(5, reservation.getReservationId());
+//            pstmt.setString(3, reservation.getReservationStatus());
             pstmt.executeUpdate();
 
             // 현재 날짜와 체크인 날짜 비교

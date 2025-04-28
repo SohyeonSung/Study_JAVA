@@ -24,8 +24,11 @@ public class Room_DAO {
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
-
-            System.out.println("\n[전체 객실 목록]");
+        	
+        	System.out.println("");
+            System.out.println("	────────────────");
+            System.out.println("	🏨 전체 객실 정보 🏨");
+            System.out.println("	────────────────");
             Date currentDate = new Date(System.currentTimeMillis()); // 현재 날짜 가져오기
 
             while (rs.next()) {
@@ -53,10 +56,15 @@ public class Room_DAO {
                 }
 
                 // 상태 업데이트
-                System.out.println("객실 번호: " + roomNumber +
-                                   ", 타입: " + roomType +
-                                   ", 상태: " + roomStatus +
-                                   ", 가격: " + price + "원");
+                System.out.println("	────────────────────────────────────────────────────────────────");
+                System.out.print("	객실 번호: " + roomNumber + " | ");
+                System.out.print("	타입: " + roomType + " | ");
+                System.out.print("	상태: " + roomStatus + " | ");
+                System.out.print("	💰 가격: " + price + "원");
+                System.out.println();
+                System.out.println("	────────────────────────────────────────────────────────────────");
+
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,7 +83,10 @@ public class Room_DAO {
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
-            System.out.println("\n[빈 객실 목록]");
+        	System.out.println("");
+            System.out.println("	────────────────");
+            System.out.println("	🛏️ 빈 객실 정보 🏨");
+            System.out.println("	────────────────");
             boolean isEmpty = true;
 
             while (rs.next()) {
@@ -84,15 +95,18 @@ public class Room_DAO {
                 String roomStatus = rs.getString("roomStatus");
                 int price = rs.getInt("price");
 
-                System.out.println("객실 번호: " + roomNumber +
-                                   ", 타입: " + roomType +
-                                   ", 상태: " + roomStatus +
-                                   ", 가격: " + price + "원");
+                System.out.println("	────────────────────────────────────────────────────────────────");
+                System.out.print("	객실 번호: " + roomNumber + " | ");
+                System.out.print("	타입: " + roomType + " | ");
+                System.out.print("	상태: " + roomStatus + " | ");
+                System.out.print("	💰 가격: " + price + "원");
+                System.out.println();
+                System.out.println("	────────────────────────────────────────────────────────────────");
                 isEmpty = false;
             }
 
             if (isEmpty) {
-                System.out.println("⚠️ 현재 빈 객실이 없습니다.");
+                System.out.println("	⚠️ 현재 빈 객실이 없습니다.");
             }
 
         } catch (Exception e) {
@@ -109,8 +123,11 @@ public class Room_DAO {
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
-
-            System.out.println("\n[예약된 객실 목록]");
+        	
+        	System.out.println("");
+            System.out.println("	─────────────────────");
+            System.out.println("	🚪 사용 중인 객실 정보 🚪");
+            System.out.println("	─────────────────────");
             boolean isEmpty = true;
 
             while (rs.next()) {
@@ -119,15 +136,18 @@ public class Room_DAO {
                 String roomStatus = rs.getString("roomStatus");
                 int price = rs.getInt("price");
 
-                System.out.println("객실 번호: " + roomNumber +
-                                   ", 타입: " + roomType +
-                                   ", 상태: " + roomStatus +
-                                   ", 가격: " + price + "원");
+                System.out.println("	────────────────────────────────────────────────────────────────");
+                System.out.print("	객실 번호: " + roomNumber + " | ");
+                System.out.print("	타입: " + roomType + " | ");
+                System.out.print("	상태: " + roomStatus + " | ");
+                System.out.print("	💰 가격: " + price + "원");
+                System.out.println();
+                System.out.println("	────────────────────────────────────────────────────────────────");
                 isEmpty = false;
             }
 
             if (isEmpty) {
-                System.out.println("⚠️ 현재 예약된 객실이 없습니다.");
+                System.out.println("	⚠️ 현재 예약된 객실이 없습니다.");
             }
 
         } catch (Exception e) {
