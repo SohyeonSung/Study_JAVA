@@ -6,11 +6,10 @@ public class Room {
     private int roomNumber;  // 방 번호
     private String roomType; // 방 타입 (싱글, 더블, 스위트 등)
     private String roomStatus; // 방 상태 (빈방 -> O , 예약 중 -> X등)
-    private int price;  // 방 가격
+    private int price;
     
-
     // 생성자
-    public Room(int roomNumber, String roomType, String roomStatus, int price) {
+    public Room(int roomNumber, String roomType, String roomStatus) {
         this.roomNumber = roomNumber;
         this.roomType = roomType;
         this.roomStatus = roomStatus;
@@ -49,13 +48,14 @@ public class Room {
     public void setPrice(int price) {
         this.price = price;
     }
-
+   
+    
     @Override
     public String toString() {
         return "Room Number: " + roomNumber 
         		+ ", Type: " + roomType 
         		+ ", Status: " + roomStatus
-        		+ ", Price: " + price + "원";
+        		+ ", Price: " + price;
     }
 }
 

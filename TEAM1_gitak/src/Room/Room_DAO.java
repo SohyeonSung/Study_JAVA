@@ -17,7 +17,9 @@ public class Room_DAO {
 
     // 전체 객실 목록 조회
     public void getAllRooms() {
-        String sql = "SELECT * FROM ROOM";
+    	String sql = "SELECT r.ROOMNUMBER, r.ROOMTYPE, r.ROOMSTATUS, rt.price " +
+                "FROM ROOM r " +
+                "JOIN room_types rt ON r.ROOMTYPE = rt.ROOMTYPE";
         
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -30,6 +32,7 @@ public class Room_DAO {
                 int roomNumber = rs.getInt("roomNumber");
                 String roomType = rs.getString("roomType");
                 String roomStatus = rs.getString("roomStatus");
+                int price = rs.getInt("price");
 
                 // 현재 객실의 예약 상태를 체크하여, 상태를 최신화
                 if ("빈 객실".equals(roomStatus)) {
@@ -52,7 +55,8 @@ public class Room_DAO {
                 // 상태 업데이트
                 System.out.println("객실 번호: " + roomNumber +
                                    ", 타입: " + roomType +
-                                   ", 상태: " + roomStatus);
+                                   ", 상태: " + roomStatus +
+                                   ", 가격: " + price + "원");
             }
         } catch (Exception e) {
             e.printStackTrace();
