@@ -46,6 +46,12 @@ public boolean insertManager(String managerId, String managerName, int password)
     return false;
 }
 
+
+
+
+
+
+
 //// 모든 관리자 정보 출력
 //public void showAllManagers() {
 //    String sql = "SELECT * FROM MANAGER ORDER BY MANAGERID";
