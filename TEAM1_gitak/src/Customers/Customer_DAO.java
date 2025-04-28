@@ -1,6 +1,7 @@
 package Customers;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +54,15 @@ public class Customer_DAO {
         ResultSet rs = null;
 
         try {
+        	LocalDate currentDate = LocalDate.now();
+            LocalDate inputCheckInDate = checkIn.toLocalDate();  // checkIn을 LocalDate로 변환
+
+            // (0) 입력한 체크인 날짜가 현재 날짜보다 이전이면 예약 불가
+            if (inputCheckInDate.isBefore(currentDate)) {
+                System.out.println("	❌ 예약은 현재 날짜 이후로만 가능합니다. ❌");
+                return false;
+            }
+
             conn = getConnection();
             conn.setAutoCommit(false); // 트랜잭션 시작
 
@@ -68,7 +78,7 @@ public class Customer_DAO {
             rs = pstmt.executeQuery();
 
             if (rs.next() && rs.getInt(1) > 0) {
-                System.out.println("		❌ 해당 객실은 이미 예약되어 있습니다.");
+                System.out.println("		❌ 해당 객실은 이미 예약되어 있습니다.❌");
                 conn.rollback(); // 예약 실패시 롤백
                 return false;
             }
@@ -93,7 +103,7 @@ public class Customer_DAO {
             long diffDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
             if (diffDays <= 0) {
-                System.out.println("		❌ 체크아웃 날짜는 체크인 날짜보다 이후여야 합니다.");
+                System.out.println("		❌ 체크아웃 날짜는 체크인 날짜보다 이후여야 합니다.❌");
                 conn.rollback(); // 날짜가 유효하지 않으면 롤백
                 return false; 
             }
@@ -142,11 +152,11 @@ public class Customer_DAO {
                     conn.commit();
                 } else {
                     conn.rollback();
-                    System.out.println("	❌ 방 상태 업데이트 실패로 예약 취소됨");
+                    System.out.println("	❌ 방 상태 업데이트 실패로 예약 취소됨 ❌");
                 }
             } else {
                 conn.rollback();
-                System.out.println("	❌ 예약 생성 실패");
+                System.out.println("	❌ 예약 생성 실패 ❌");
             }
         } catch (SQLException e) {
             try {

@@ -1,4 +1,4 @@
-package Customers;
+package Reservation;
 
 import java.sql.Date;
 
