@@ -23,7 +23,7 @@ public class Manager_Main {
 	            System.out.println("\n[관리자 메뉴]");
 	            System.out.println("1. 전체 객실 상태 보기");
 	            System.out.println("2. 빈 객실만 보기");
-	            System.out.println("3. 투숙 중인 객실 보기");
+	            System.out.println("3. 사용 중인 객실 보기");
 	            System.out.println("4. 객실 상태 변경");
 	            System.out.println("0. 종료");
 	            System.out.print("선택 > ");

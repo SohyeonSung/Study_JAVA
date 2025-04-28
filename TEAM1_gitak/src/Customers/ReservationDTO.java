@@ -12,7 +12,7 @@ public class ReservationDTO {
     private Date lastModified; // 마지막 수정 날짜
     
 
-    public ReservationDTO(int reservationId, int customerId, int roomNumber, Date checkInDate, Date checkOutDate) {
+    public ReservationDTO(int reservationId, int customerId, int roomNumber, Date checkInDate, Date checkOutDate, Date lastModified, String reservationStatus) {
         this.reservationId = reservationId;
         this.customerId = customerId;
         this.roomNumber = roomNumber;

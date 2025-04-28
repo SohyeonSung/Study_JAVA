@@ -7,7 +7,7 @@ import java.util.List;
 public class CustomerDAO {
 
     private Connection getConnection() throws SQLException {
-        String url = "jdbc:oracle:thin:@localhost:1521:xe"; // DB 주소
+        String url = "jdbc:oracle:thin:@192.168.18.10:1521:xe"; // DB 주소
         String user = "TEAM1"; // DB 사용자명
         String password = "team1"; // DB 비밀번호
         return DriverManager.getConnection(url, user, password);
@@ -53,41 +53,61 @@ public class CustomerDAO {
 
         try {
             conn = getConnection();
-            
-            // 예약 중복 체크
+            conn.setAutoCommit(false); // 🔥 트랜잭션 시작 (꼭 해줘야 둘 다 성공/실패 같이 관리됨)
+
+            // 1. 예약 중복 체크
             String checkAvailabilityQuery = "SELECT COUNT(*) FROM RESERVATION WHERE ROOMNUMBER = ? "
                 + "AND (CHECKINDATE BETWEEN ? AND ? OR CHECKOUTDATE BETWEEN ? AND ?)";
             pstmt = conn.prepareStatement(checkAvailabilityQuery);
-            
-            // 매개변수 바인딩 순서에 맞게 설정
-            pstmt.setInt(1, roomNumber); // ROOMNUMBER
-            pstmt.setDate(2, checkIn);    // CHECKINDATE의 시작
-            pstmt.setDate(3, checkOut);   // CHECKOUTDATE의 끝
-            pstmt.setDate(4, checkIn);    // CHECKINDATE의 시작
-            pstmt.setDate(5, checkOut);   // CHECKOUTDATE의 끝
-            
+            pstmt.setInt(1, roomNumber);
+            pstmt.setDate(2, checkIn);
+            pstmt.setDate(3, checkOut);
+            pstmt.setDate(4, checkIn);
+            pstmt.setDate(5, checkOut);
             rs = pstmt.executeQuery();
-            
+
             if (rs.next() && rs.getInt(1) > 0) {
                 System.out.println("❌ 해당 객실은 이미 예약되어 있습니다.");
-                return false; // 예약 중복 시 false 반환
+                conn.rollback(); // 🔥 rollback 해줘야 해
+                return false;
             }
 
-            // 예약 생성
+            // 2. 예약 생성
             String insertReservationQuery = "INSERT INTO RESERVATION (RESERVATIONID, CUSTID, ROOMNUMBER, CHECKINDATE, CHECKOUTDATE) "
                 + "VALUES (?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(insertReservationQuery);
-            pstmt.setInt(1, reservationId); // RESERVATIONID
-            pstmt.setString(2, custId);     // CUSTID
-            pstmt.setInt(3, roomNumber);    // ROOMNUMBER
-            pstmt.setDate(4, checkIn);      // CHECKINDATE
-            pstmt.setDate(5, checkOut);     // CHECKOUTDATE
+            pstmt.setInt(1, reservationId);
+            pstmt.setString(2, custId);
+            pstmt.setInt(3, roomNumber);
+            pstmt.setDate(4, checkIn);
+            pstmt.setDate(5, checkOut);
 
             int rowsAffected = pstmt.executeUpdate();
+            
             if (rowsAffected > 0) {
-                success = true;
+                // 3. 방 상태 업데이트
+                String updateRoomStatusQuery = "UPDATE ROOM SET ROOMSTATUS = '사용 중' WHERE ROOMNUMBER = ?";
+                pstmt = conn.prepareStatement(updateRoomStatusQuery);
+                pstmt.setInt(1, roomNumber);
+                int updateResult = pstmt.executeUpdate();
+
+                if (updateResult > 0) {
+                    success = true;
+                    conn.commit(); // 🔥 둘 다 성공했으면 커밋
+                    System.out.println("✅ 예약 완료 및 방 상태 '사용 중' 업데이트 완료");
+                } else {
+                    conn.rollback(); // 예약 성공했는데 방 상태 업데이트 실패하면 rollback
+                    System.out.println("❌ 방 상태 업데이트 실패로 예약 취소됨");
+                }
+            } else {
+                conn.rollback(); // 예약 insert 실패
             }
         } catch (SQLException e) {
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
         } finally {
             closeResources(rs, pstmt, conn);
@@ -149,7 +169,7 @@ public class CustomerDAO {
 
     // 회원가입
     public boolean signup(Customers customer) {
-        String sql = "INSERT INTO CUSTOMER (CUSTID, PASSWORD, CUSTOMERNAME) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO CUSTOMERS (CUSTID, PASSWORD, CUSTOMERNAME) VALUES (?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, customer.getCustId());
             stmt.setInt(2, customer.getPassword());
