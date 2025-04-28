@@ -1,7 +1,5 @@
 package Room;
 
-import oracle.jdbc.proxy._Proxy_;
-
 public class Room {
     private int roomNumber;  // 방 번호
     private String roomType; // 방 타입 (싱글, 더블, 스위트 등)

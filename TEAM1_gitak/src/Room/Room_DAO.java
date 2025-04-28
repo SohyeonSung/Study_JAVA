@@ -19,7 +19,7 @@ public class Room_DAO {
     public void getAllRooms() {
     	String sql = "SELECT r.ROOMNUMBER, r.ROOMTYPE, r.ROOMSTATUS, rt.price " +
                 "FROM ROOM r " +
-                "JOIN room_types rt ON r.ROOMTYPE = rt.ROOMTYPE";
+                "JOIN room_types rt ON r.ROOMTYPE = rt.ROOMTYPE"; // 객실 정보, 가격 조회
         
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -29,7 +29,7 @@ public class Room_DAO {
             System.out.println("	────────────────");
             System.out.println("	🏨 전체 객실 정보 🏨");
             System.out.println("	────────────────");
-            Date currentDate = new Date(System.currentTimeMillis()); // 현재 날짜 가져오기
+            Date currentDate = new Date(System.currentTimeMillis()); // 현재 날짜
 
             while (rs.next()) {
                 int roomNumber = rs.getInt("roomNumber");

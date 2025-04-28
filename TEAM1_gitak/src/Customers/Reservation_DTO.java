@@ -2,24 +2,20 @@ package Customers;
 
 import java.sql.Date;
 
-public class ReservationDTO {
+public class Reservation_DTO {
     private int reservationId; // 예약 번호
     private int customerId;  // 고객 ID (새로 추가)
     private int roomNumber; // 방 번호
     private Date checkInDate; // 체크인 날짜
     private Date checkOutDate; // 체크아웃 날짜
-//    private String reservationStatus; // 예약 상태
-//    private Date lastModified; // 마지막 수정 날짜
     
 
-    public ReservationDTO(int reservationId, int customerId, int roomNumber, Date checkInDate, Date checkOutDate) {
+    public Reservation_DTO(int reservationId, int customerId, int roomNumber, Date checkInDate, Date checkOutDate) {
         this.reservationId = reservationId;
         this.customerId = customerId;
         this.roomNumber = roomNumber;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-//        this.reservationStatus = reservationStatus;
-//        this.lastModified = lastModified;
     }
 
     public int getReservationId() {

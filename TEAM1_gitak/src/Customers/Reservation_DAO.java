@@ -6,28 +6,27 @@ import java.sql.SQLException;
 import java.sql.Date;
 import Util.DBUtil;
 
-public class ReservationDAO {
+public class Reservation_DAO {
 
     // 예약 생성
-    public void createReservation(ReservationDTO reservation) {
-        String sql = "INSERT INTO RESERVATION (CUSTOMER_ID, ROOMNUMBER, CHECKINDATE, CHECKOUTDATE) VALUES (?, ?, ?, ?)";
-
+    public void createReservation(Reservation_DTO reservation) {
+    	// 예약 INSERT
+    	String sql = "INSERT INTO RESERVATION (CUSTOMER_ID, ROOMNUMBER, CHECKINDATE, CHECKOUTDATE) VALUES (?, ?, ?, ?)";
+    	// 예약 생성 후 객실 상태 업데이트
         String updateRoomSql = "UPDATE ROOM SET ROOMSTATUS = '사용 중' WHERE ROOMNUMBER = ?";
 
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             PreparedStatement pstmtUpdateRoom = conn.prepareStatement(updateRoomSql)) {
+        try (Connection conn = DBUtil.getConnection(); // DB 연결
+             PreparedStatement pstmt = conn.prepareStatement(sql); // 예약 생성 쿼리 실행
+             PreparedStatement pstmtUpdateRoom = conn.prepareStatement(updateRoomSql)) { // 객실 상태 업데이트 쿼리 실행
 
-            pstmt.setInt(1, reservation.getCustomerId());  // 고객 ID
+            pstmt.setInt(1, reservation.getCustomerId()); 
             pstmt.setInt(2, reservation.getRoomNumber());
             pstmt.setDate(3, reservation.getCheckInDate());
             pstmt.setDate(4, reservation.getCheckOutDate());
-//            pstmt.setString(5, reservation.getReservationStatus());
-//            pstmt.setDate(6, reservation.getLastModified());
 
-            pstmt.executeUpdate();
+            pstmt.executeUpdate(); // 예약 생성
 
-            pstmtUpdateRoom.setInt(1, reservation.getRoomNumber());
+            pstmtUpdateRoom.setInt(1, reservation.getRoomNumber()); // 객실 상태 '사용 중'으로 업데이트
             pstmtUpdateRoom.executeUpdate();
 
         } catch (SQLException e) {
@@ -36,8 +35,10 @@ public class ReservationDAO {
     }
 
     // 예약 수정
-    public void updateReservation(ReservationDTO reservation) {
+    public void updateReservation(Reservation_DTO reservation) {
+    	// 예약 정보 업데이트
         String updateReservationSql = "UPDATE RESERVATION SET CHECKIN_DATE = ?, CHECKOUT_DATE = ? WHERE RESERVATION_ID = ?";
+        // 객실 상태 업데이트
         String updateRoomSql = "UPDATE ROOM SET ROOMSTATUS = ? WHERE ROOMNUMBER = ?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -49,7 +50,6 @@ public class ReservationDAO {
             // 예약 정보 업데이트
             pstmt.setDate(1, reservation.getCheckInDate());
             pstmt.setDate(2, reservation.getCheckOutDate());
-//            pstmt.setString(3, reservation.getReservationStatus());
             pstmt.executeUpdate();
 
             // 현재 날짜와 체크인 날짜 비교
@@ -75,7 +75,9 @@ public class ReservationDAO {
 
     // 예약 취소
     public void cancelReservation(int reservationId, int roomNumber) {
+    	// 예약 취소 변경
         String sql = "UPDATE RESERVATION SET RESERVATION_STATUS = '취소', LAST_MODIFIED = ? WHERE RESERVATION_ID = ?";
+        // 객실 상태 '빈 객실'
         String updateRoomSql = "UPDATE ROOM SET ROOMSTATUS = '빈 객실' WHERE ROOMNUMBER = ?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -84,7 +86,7 @@ public class ReservationDAO {
 
             conn.setAutoCommit(false); // 자동 커밋 끄기
 
-            pstmt.setDate(1, new java.sql.Date(System.currentTimeMillis()));  // 현재 시간으로 수정일 설정
+            pstmt.setDate(1, new java.sql.Date(System.currentTimeMillis()));  // 예약 상태 '취소'설정 , 수정일 현재 날짜
             pstmt.setInt(2, reservationId);
             pstmt.executeUpdate();
 
