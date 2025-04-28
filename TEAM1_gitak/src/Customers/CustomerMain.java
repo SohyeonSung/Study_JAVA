@@ -49,8 +49,6 @@ public class CustomerMain {
                         break;
 
                     case 3: // ✅ 예약 생성
-                        System.out.print("	- 예약번호: ");
-                        int newResId = Integer.parseInt(sc.nextLine());
                         System.out.print("	- 방 번호: ");
                         int roomNum = Integer.parseInt(sc.nextLine());
                         System.out.print("	- 체크인 날짜 (yyyy-mm-dd): ");
@@ -58,7 +56,7 @@ public class CustomerMain {
                         System.out.print("	- 체크아웃 날짜 (yyyy-mm-dd): ");
                         Date checkOut = Date.valueOf(sc.nextLine());
 
-                        boolean success = customerDAO.createReservation(newResId, custId, roomNum, checkIn, checkOut);
+                        boolean success = customerDAO.createReservation(custId, roomNum, checkIn, checkOut);
                         System.out.println(success ? "	✅ 예약 성공 ✅ " : "		❌ 예약 실패 ❌ ");
 
                         // 📌 최신 예약 조회

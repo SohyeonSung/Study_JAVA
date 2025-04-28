@@ -46,7 +46,7 @@ public class CustomerDAO {
     }
 
     // 예약 생성
-    public boolean createReservation(int reservationId, String custId, int roomNumber, Date checkIn, Date checkOut) {
+    public boolean createReservation(String custId, int roomNumber, Date checkIn, Date checkOut) {
         boolean success = false;
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -68,10 +68,12 @@ public class CustomerDAO {
             rs = pstmt.executeQuery();
 
             if (rs.next() && rs.getInt(1) > 0) {
-                System.out.println("	❌ 해당 객실은 이미 예약되어 있습니다.");
-                conn.rollback(); // 예약 중복 시 롤백
+                System.out.println("		❌ 해당 객실은 이미 예약되어 있습니다.");
+                conn.rollback();
                 return false;
             }
+            pstmt.close();
+            rs.close();
 
             // 2. 객실 가격 조회
             String getRoomPriceQuery = "SELECT PRICE FROM ROOM_TYPES WHERE ROOMTYPE = (SELECT ROOMTYPE FROM ROOM WHERE ROOMNUMBER = ?)";
@@ -81,56 +83,71 @@ public class CustomerDAO {
 
             int pricePerDay = 0;
             if (rs.next()) {
-                pricePerDay = rs.getInt("PRICE"); // 객실 일일 가격
+                pricePerDay = rs.getInt("PRICE");
             }
+            pstmt.close();
+            rs.close();
 
-            // 3. 예약 일수 계산
+         // 3. 예약 일수 계산
             long diffInMillies = checkOut.getTime() - checkIn.getTime();
             long diffDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-            
+
             if (diffDays <= 0) {
-                System.out.println("	❌ 체크아웃 날짜는 체크인 날짜보다 이후여야 합니다.");
-                conn.rollback(); // 예약 일수가 0일 이하이면 롤백
+                System.out.println("		❌ 체크아웃 날짜는 체크인 날짜보다 이후여야 합니다.");
+                conn.rollback();
                 return false;
             }
 
             // 4. 총 가격 계산
-            int totalPrice = (int)(pricePerDay * diffDays);  // 일수 * 일일 가격
+            int totalPrice = (int)(pricePerDay * diffDays);
 
             System.out.println("	- 예약일수: " + diffDays + "일");
-            System.out.println("	- 객실 가격: " + pricePerDay + "원 (일)");
+            System.out.println("	- 객실 가격: " + pricePerDay + "원 /일");
             System.out.println("	- 총 금액: " + totalPrice + "원");
 
-            // 5. 예약 생성
+
+
+         // 5. 예약 생성 (reservation_num.NEXTVAL 사용)
             String insertReservationQuery = "INSERT INTO RESERVATION (RESERVATIONID, CUSTID, ROOMNUMBER, CHECKINDATE, CHECKOUTDATE, TOTALPRICE) "
-                + "VALUES (?, ?, ?, ?, ?, ?)";
+                + "VALUES (reservation_num.NEXTVAL, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(insertReservationQuery);
-            pstmt.setInt(1, reservationId);
-            pstmt.setString(2, custId);
-            pstmt.setInt(3, roomNumber);
-            pstmt.setDate(4, checkIn);
-            pstmt.setDate(5, checkOut);
-            pstmt.setInt(6, totalPrice);
+            pstmt.setString(1, custId);
+            pstmt.setInt(2, roomNumber);
+            pstmt.setDate(3, checkIn);
+            pstmt.setDate(4, checkOut);
+            pstmt.setInt(5, totalPrice);
 
             int rowsAffected = pstmt.executeUpdate();
-            
+            pstmt.close();
+
             if (rowsAffected > 0) {
-                // 6. 방 상태 업데이트
+
+            	// 6. 방 상태 업데이트
                 String updateRoomStatusQuery = "UPDATE ROOM SET ROOMSTATUS = '사용 중' WHERE ROOMNUMBER = ?";
                 pstmt = conn.prepareStatement(updateRoomStatusQuery);
                 pstmt.setInt(1, roomNumber);
                 int updateResult = pstmt.executeUpdate();
+                pstmt.close();
 
                 if (updateResult > 0) {
-                    success = true;
-                    conn.commit(); // 둘 다 성공하면 커밋
-//                    System.out.println("	✅ 예약 완료 및 방 상태 '사용 중' 업데이트 완료");
+                    // 생성된 예약번호 출력
+                    String getReservationIdQuery = "SELECT reservation_num.CURRVAL FROM dual";
+                    pstmt = conn.prepareStatement(getReservationIdQuery);
+                    rs = pstmt.executeQuery();
+                    if (rs.next()) {
+                        int generatedReservationId = rs.getInt(1);
+//                        System.out.println("	✅ 예약 완료 및 방 상태 '사용 중' 업데이트 완료");
+                        System.out.println("	- 🎟️ 고객님의 예약번호는 [" + generatedReservationId + "] 입니다. 꼭 기억해 주세요!");
+                    }
+                    success = true; 
+                    conn.commit();
                 } else {
-                    conn.rollback(); // 방 상태 업데이트 실패 시 롤백
-//                    System.out.println("❌ 방 상태 업데이트 실패로 예약 취소됨");
+                    conn.rollback();
+                    System.out.println("	❌ 방 상태 업데이트 실패로 예약 취소됨");
                 }
             } else {
-                conn.rollback(); // 예약 insert 실패 시 롤백
+                conn.rollback();
+                System.out.println("	❌ 예약 생성 실패");
             }
         } catch (SQLException e) {
             try {
@@ -145,6 +162,13 @@ public class CustomerDAO {
 
         return success;
     }
+    
+    
+    
+    
+    
+    
+    
     // 고객 예약 조회
     public List<String> getReservationsByCustomer(String custId) {
         List<String> reservations = new ArrayList<>();
