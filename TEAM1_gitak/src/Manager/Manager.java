@@ -29,13 +29,14 @@ public class Manager {
 	            System.out.println("	━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 	            System.out.println("	1. 🏨 전체 객실 상태 보기");
 	            System.out.println("	2. 🛏️ 빈 객실만 보기");
-	            System.out.println("	3. 🚪 사용 중인 객실 보기");
-	            System.out.println("	4. 🔄 객실 상태 변경");
-	            System.out.println(" 	5. 💰 일매출 조회");
-	            System.out.println("	6. 💰 월매출 조회");
-	            System.out.println("	7. 💰 기간별 매출 조회");
-	            System.out.println("	8. 👤 전체 회원 목록 보기");
-	            System.out.println("	9. 🔍 회원 이름으로 검색");
+	            System.out.println("	3. 📖 전체 고객 예약 정보");
+	            System.out.println("	4. 🚪 사용 중인 객실 보기");
+	            System.out.println("	5. 🔄 객실 상태 변경");
+	            System.out.println(" 	6. 💰 일매출 조회");
+	            System.out.println("	7. 💰 월매출 조회");
+	            System.out.println("	8. 💰 기간별 매출 조회");
+	            System.out.println("	9. 👤 전체 회원 목록 보기");
+	            System.out.println("	10. 🔍 회원 이름으로 검색");
 	            System.out.println("	0. 🚪 종료");
 	            System.out.println("	━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 	            System.out.print("	➡️  ");
@@ -52,7 +53,7 @@ public class Manager {
 	                    roomDAO.getAvailableRooms();
 	                    break;
 	                case 3: // 예약 된 객실
-	                    roomDAO.getOccupiedRooms();
+	                    roomDAO.getAllReservations();
 	                    break;
 	                case 4: // 객실 상태 변경
 	                       System.out.print("   🔄 변경할 객실 번호: ");

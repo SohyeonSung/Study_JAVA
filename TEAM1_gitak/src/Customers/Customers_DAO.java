@@ -4,9 +4,10 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class Customer_DAO {
+public class Customers_DAO {
 
     private Connection getConnection() throws SQLException {
         String url = "jdbc:oracle:thin:@192.168.18.10:1521:xe";
@@ -31,7 +32,7 @@ public class Customer_DAO {
         }
     }
 
- // 고객 로그인 기능 (회원 이름 반환)
+    // 고객 로그인 기능 
     public String login(String custId, String password) {
         String sql = "SELECT * FROM CUSTOMERS WHERE CUSTID = ? AND PASSWORD = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -225,7 +226,22 @@ public class Customer_DAO {
 
     // 고객 예약 수정
     public boolean updateReservationDates(int reservationId, Date newCheckIn, Date newCheckOut) {
-        // 예약 수정 전에 중복 예약 날짜 체크
+        // (1) 과거 날짜 입력 방지
+        LocalDate today = LocalDate.now();
+        LocalDate checkInDate = newCheckIn.toLocalDate();
+        LocalDate checkOutDate = newCheckOut.toLocalDate();
+
+        if (checkInDate.isBefore(today) || checkOutDate.isBefore(today)) {
+            System.out.println("❌ 과거 날짜로는 예약을 수정할 수 없습니다. 오늘 이후의 날짜로 다시 입력해주세요. ❌");
+            return false;
+        }
+
+        if (!checkInDate.isBefore(checkOutDate)) {
+            System.out.println("❌ 체크아웃 날짜는 체크인 날짜보다 이후여야 합니다. 다시 입력해주세요. ❌");
+            return false;
+        }
+
+        // (2) 중복 예약 날짜 체크
         String checkAvailabilityQuery = "SELECT COUNT(*) FROM RESERVATION "
                 + "WHERE ROOMNUMBER = (SELECT ROOMNUMBER FROM RESERVATION WHERE RESERVATIONID = ?) "
                 + "AND RESERVATIONID != ? "
@@ -242,16 +258,15 @@ public class Customer_DAO {
             
             ResultSet rs = checkStmt.executeQuery();
             if (rs.next() && rs.getInt(1) > 0) {
-                // 예약 날짜가 겹치는 경우
-                System.out.println("	❌ 날짜가 이미 다른 예약과 겹칩니다. ❌");
+                System.out.println("❌ 해당 날짜는 이미 다른 예약과 겹칩니다. 다시 선택해주세요. ❌");
                 return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
-        
-        // 날짜가 겹치지 않으면 예약 수정 진행
+
+        // (3) 예약 수정
         String sql = "UPDATE RESERVATION SET CHECKINDATE = ?, CHECKOUTDATE = ? WHERE RESERVATIONID = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setDate(1, newCheckIn);
@@ -265,55 +280,85 @@ public class Customer_DAO {
         return false;
     }
 
-    // 고객 예약 취소
-    public boolean cancelReservation(int reservationId) {
+    // 고객 예약 취소 메서드
+    public boolean cancelReservationWithAuth(Scanner scanner) {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         boolean success = false;
-        int roomNumber = -1;  // 예약된 방 번호를 저장할 변수
 
         try {
-            conn = getConnection();
-            conn.setAutoCommit(false);  // 트랜잭션 시작
+            System.out.print("📝 예약번호를 입력하세요: ");
+            int reservationId = Integer.parseInt(scanner.nextLine());
 
-            // (1) 예약 id로 방 번호 조회
-            String getRoomNumberQuery = "SELECT ROOMNUMBER FROM RESERVATION WHERE RESERVATIONID = ?";
-            pstmt = conn.prepareStatement(getRoomNumberQuery);
+            System.out.print("🔐 비밀번호를 입력하세요: ");
+            String inputPassword = scanner.nextLine();
+
+            conn = getConnection();
+            conn.setAutoCommit(false);
+
+            // (1) 예약 ID로 고객 ID 및 방번호 조회
+            String getReservationInfo = "SELECT CUSTID, ROOMNUMBER FROM RESERVATION WHERE RESERVATIONID = ?";
+            pstmt = conn.prepareStatement(getReservationInfo);
             pstmt.setInt(1, reservationId);
             rs = pstmt.executeQuery();
 
+            String custId = null;
+            int roomNumber = -1;
+
             if (rs.next()) {
+                custId = rs.getString("CUSTID");
                 roomNumber = rs.getInt("ROOMNUMBER");
             } else {
-                // 예약이 존재하지 않으면
-                conn.rollback();
+                System.out.println("❌ 해당 예약번호는 존재하지 않습니다.");
                 return false;
             }
 
-            rs.close();
             pstmt.close();
+            rs.close();
 
-            // (2) 예약 삭제
+            // (2) CUSTID로 고객 비밀번호 조회
+            String getPasswordQuery = "SELECT PASSWORD FROM CUSTOMERS WHERE CUSTID = ?";
+            pstmt = conn.prepareStatement(getPasswordQuery);
+            pstmt.setString(1, custId);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String dbPassword = rs.getString("PASSWORD");
+                if (!dbPassword.equals(inputPassword)) {
+                    System.out.println("❌ 비밀번호가 일치하지 않습니다.");
+                    return false;
+                }
+            } else {
+                System.out.println("❌ 고객 정보가 존재하지 않습니다.");
+                return false;
+            }
+
+            pstmt.close();
+            rs.close();
+
+            // (3) 예약 삭제
             String deleteReservationQuery = "DELETE FROM RESERVATION WHERE RESERVATIONID = ?";
             pstmt = conn.prepareStatement(deleteReservationQuery);
             pstmt.setInt(1, reservationId);
             int rowsAffected = pstmt.executeUpdate();
-            pstmt.close();
 
             if (rowsAffected == 0) {
+                System.out.println("❌ 예약 삭제에 실패했습니다.");
                 conn.rollback();
                 return false;
             }
 
-            // (3) ROOM 테이블 상태 "빈 객실"로 변경
-            String updateRoomStatusQuery = "UPDATE ROOM SET ROOMSTATUS = '빈 객실' WHERE ROOMNUMBER = ?";
-            pstmt = conn.prepareStatement(updateRoomStatusQuery);
+            pstmt.close();
+
+            // (4) 객실 상태 복구
+            String updateRoomStatus = "UPDATE ROOM SET ROOMSTATUS = '빈 객실' WHERE ROOMNUMBER = ?";
+            pstmt = conn.prepareStatement(updateRoomStatus);
             pstmt.setInt(1, roomNumber);
             pstmt.executeUpdate();
 
-            // (4) 성공하면 커밋
             conn.commit();
+            System.out.println("✅ 예약이 정상적으로 취소되었습니다.");
             success = true;
 
         } catch (SQLException e) {
@@ -335,6 +380,7 @@ public class Customer_DAO {
 
         return success;
     }
+
 
     // 고객 회원가입
     public boolean signup(Customers_DTO customer) {
@@ -365,6 +411,85 @@ public class Customer_DAO {
         }
         return false; // id가 존재하면 false 반환
     }
+    
+    public boolean deleteCustomer(String custId, int inputPassword) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false);
+
+            // (1) 고객 비밀번호 확인
+            String getPasswordQuery = "SELECT PASSWORD FROM CUSTOMERS WHERE CUSTID = ?";
+            pstmt = conn.prepareStatement(getPasswordQuery);
+            pstmt.setString(1, custId);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String dbPassword = rs.getString("PASSWORD");
+                if (!dbPassword.equals(String.valueOf(inputPassword))) {
+                    System.out.println("❌ 비밀번호가 일치하지 않습니다.");
+                    return false;
+                }
+            } else {
+                System.out.println("❌ 존재하지 않는 아이디입니다.");
+                return false;
+            }
+
+            rs.close();
+            pstmt.close();
+
+            // (2) 고객 예약 삭제
+            String deleteReservationsQuery = "DELETE FROM RESERVATION WHERE CUSTID = ?";
+            pstmt = conn.prepareStatement(deleteReservationsQuery);
+            pstmt.setString(1, custId);
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            // (3) 고객 정보 삭제
+            String deleteCustomerQuery = "DELETE FROM CUSTOMERS WHERE CUSTID = ?";
+            pstmt = conn.prepareStatement(deleteCustomerQuery);
+            pstmt.setString(1, custId);
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                conn.commit();
+                return true;
+            } else {
+                conn.rollback();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+    
 
 }
+
+
+
+
+
+
+
+
+
 

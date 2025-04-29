@@ -22,11 +22,12 @@ public class Hotel {
 
         while (isRunning) {  // 프로그램이 실행되는 동안 반복하는 루프
       
-            System.out.println("	😊 Welcome to 장미여관 😊");
+            System.out.println("	😊 Welcome to Team 1 Hotel 😊");
             System.out.println("	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-            System.out.println("	1. 🛡️ 장미 관리자");
-            System.out.println("	2. 🧑‍💼 장미 고객");
-            System.out.println("	3. ✍️ 장미 회원가입");
+            System.out.println("	1. 🛡️ 호텔 관리자");
+            System.out.println("	2. 🧑‍💼 고객");
+            System.out.println("	3. ✍️ 회원가입");
+            System.out.println("	4. ⛔ 탈퇴 ");
             System.out.println("	0. 🚪 종료");
             System.out.println("	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
             System.out.print("	➡️  메뉴를 선택하세요 : ");
@@ -38,7 +39,7 @@ public class Hotel {
                     case 1:
                         System.out.println("");
                         System.out.println("	──────────────────────────────────────");
-                        System.out.println("	🛡️ 관리자 🛡️  ");
+                        System.out.println("	🛡️ 호텔 관리자 🛡️  ");
                         Manager manager = new Manager();
                         manager.runManager(); // 관리자 기능 실행
                         break;
@@ -57,6 +58,14 @@ public class Hotel {
                         System.out.println("	✍️ 회원가입 ✍️");
                         Customers_Signup signup = new Customers_Signup();
                         signup.signup(); 
+                        break;     
+                        
+                    case 4:
+                        System.out.println("");
+                        System.out.println("	──────────────────────────────────────");
+                        System.out.println("	⛔ 회원 탈퇴 ⛔");
+                        Customers_Signup delete = new Customers_Signup();
+                        delete.deleteAccount();  // 탈퇴 기능 실행
                         break;
 
                     case 0:

@@ -9,7 +9,7 @@ public class Customers {
 
     public void runCustomer() {
         Scanner sc = new Scanner(System.in);
-        Customer_DAO customerDAO = new Customer_DAO();
+        Customers_DAO customerDAO = new Customers_DAO();
         Room_DAO roomDAO = new Room_DAO();
 
         System.out.print("	- 고객 ID: ");
@@ -90,14 +90,12 @@ public class Customers {
                         break;
 
                     case 5: // 예약 취소
-                        System.out.print("	- 취소할 예약번호: ");
-                        int delId = Integer.parseInt(sc.nextLine());
-                        boolean deleted = customerDAO.cancelReservation(delId);
-                        System.out.println(deleted ? "	🗑️ 예약 취소 완료" : "	❌ 취소 실패");
+                        boolean deleted = customerDAO.cancelReservationWithAuth(sc);
+                        System.out.println(deleted ? "   🗑 예약 취소 완료" : "   ❌ 취소 실패");
 
                         if (deleted) {
-                        	System.out.println("");
-                            System.out.println("	📋 최신 예약 내역 📋 ");  // 최신 예약 조회
+                            System.out.println("");
+                            System.out.println("   📋 최신 예약 내역 📋 ");
                             customerDAO.getReservationsByCustomer(custId).forEach(System.out::println);
                         }
                         break;

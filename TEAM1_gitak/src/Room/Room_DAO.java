@@ -15,7 +15,7 @@ public class Room_DAO {
     private static final String USER = "TEAM1";
     private static final String PASSWORD = "team1";
 
-    // 전체 객실 목록 조회
+    // 1. 전체 객실 목록 조회
     public void getAllRooms() {
     	String sql = "SELECT r.ROOMNUMBER, r.ROOMTYPE, r.ROOMSTATUS, rt.price " +
                 "FROM ROOM r " +
@@ -74,7 +74,7 @@ public class Room_DAO {
 
 
     
-    // 빈 객실 목록 조회
+    // 2. 빈 객실 목록 조회
     public void getAvailableRooms() {
         String sql =  "SELECT r.ROOMNUMBER, r.ROOMTYPE, r.ROOMSTATUS, t.PRICE " +
         			  "FROM ROOM r JOIN ROOM_TYPES t ON r.ROOMTYPE = t.ROOMTYPE " +
@@ -115,48 +115,56 @@ public class Room_DAO {
         }
     }
 
-    // 예약된 객실 목록 조회
-    public void getOccupiedRooms() {
-        String sql = "SELECT r.ROOMNUMBER, r.ROOMTYPE, r.ROOMSTATUS, t.PRICE " +
-        			 "FROM ROOM r JOIN ROOM_TYPES t ON r.ROOMTYPE = t.ROOMTYPE " +
-        			 "WHERE r.ROOMSTATUS = '사용 중'";
+    // 3. 예약된 객실 목록 조회
+    public void getAllReservations() {
+        // RESERVATION 테이블과 CUSTOMERS 테이블을 조인하여 예약 정보를 가져옴
+        String sql = "SELECT r.RESERVATIONID, r.CUSTID, c.CUSTOMERNAME, r.ROOMNUMBER, r.CHECKINDATE, r.CHECKOUTDATE, r.TOTALPRICE " +
+                     "FROM RESERVATION r " +
+                     "JOIN CUSTOMERS c ON r.CUSTID = c.CUSTID " +
+                     "ORDER BY r.CHECKINDATE";  // 예약 날짜로 정렬
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
-        	
+
+        	System.out.println();
         	System.out.println("");
-            System.out.println("	─────────────────────");
-            System.out.println("	🚪 사용 중인 객실 정보 🚪");
-            System.out.println("	─────────────────────");
-            boolean isEmpty = true;
+        	System.out.println("	🌟 예약 상세 정보 🌟");
+        	System.out.println("	════════════════════════════════════════════════════════════════════════════════");
 
-            while (rs.next()) {
-                int roomNumber = rs.getInt("roomNumber");
-                String roomType = rs.getString("roomType");
-                String roomStatus = rs.getString("roomStatus");
-                int price = rs.getInt("price");
 
-                System.out.println("	────────────────────────────────────────────────────────────────");
-                System.out.print("	객실 번호: " + roomNumber + " | ");
-                System.out.print("	타입: " + roomType + " | ");
-                System.out.print("	상태: " + roomStatus + " | ");
-                System.out.print("	💰 가격: " + price + "원");
-                System.out.println();
-                System.out.println("	────────────────────────────────────────────────────────────────");
-                isEmpty = false;
-            }
+        	boolean isEmpty = true;
+        	while (rs.next()) {
+        	    int reservationId = rs.getInt("RESERVATIONID");
+        	    String custId = rs.getString("CUSTID");
+        	    String customerName = rs.getString("CUSTOMERNAME");  // 고객 이름
+        	    int roomNumber = rs.getInt("ROOMNUMBER");
+        	    Date checkIn = rs.getDate("CHECKINDATE");
+        	    Date checkOut = rs.getDate("CHECKOUTDATE");
+        	    int totalPrice = rs.getInt("TOTALPRICE");
 
-            if (isEmpty) {
-                System.out.println("	⚠️ 현재 예약된 객실이 없습니다.");
-            }
+        	    // 예약 정보 출력
+        	    System.out.printf("	📌 예약번호   : %-10d    👤 고객 ID : %-10s (%s)\n", reservationId, custId, customerName);
+        	    System.out.printf("	🏨 객실 번호 : %-10d     🗓️ 체크인  : %s\n", roomNumber, checkIn.toString());
+        	    System.out.printf("	🛏️ 체크아웃  : %-15s 💰 총 금액   : %,d원\n", checkOut.toString(), totalPrice);
 
-        } catch (Exception e) {
+        	    System.out.println("	════════════════════════════════════════════════════════════════════════════════");
+
+        	    isEmpty = false;
+        	}
+
+        	if (isEmpty) {
+        	    System.out.println("   😔 예약 정보가 없습니다.");
+        	}
+
+
+        } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("   ⚠️ SQL 오류 발생! : " + e.getMessage());
         }
     }
 
-    // 객실 상태 변경
+    // 4. 객실 상태 변경
     public boolean updateRoomStatus(int roomNumber, String newStatus) {
         try {
             Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);

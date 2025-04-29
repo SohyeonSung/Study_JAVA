@@ -55,6 +55,7 @@ public class Manager_DAO {
 	    return false;
 	}
 
+	// 1. 일매출 조회
 	public static int getDailySales(Date date) {
 	    int totalSales = 0;
 	    String sql = "SELECT NVL(SUM(TOTALPRICE), 0) FROM RESERVATION WHERE CHECKINDATE = ?";
@@ -121,7 +122,7 @@ public class Manager_DAO {
 	    return totalSales;
 	}
 
-	// 4. 회원 목록 조회
+	// 4. 전체 회원 목록 조회
 	public void getAllMembers() {
 	       Connection conn = null;
 	       PreparedStatement pstmt = null;
@@ -134,7 +135,7 @@ public class Manager_DAO {
 	           rs = pstmt.executeQuery();
 
 	           System.out.println("	👤 [전체 회원 목록]");
-	           System.out.println("──────────────────────────────");
+	           System.out.println("	──────────────────────────────");
 	           while (rs.next()) {
 	               String id = rs.getString("CUSTID");
 	               String name = rs.getString("CUSTOMERNAME");
@@ -151,6 +152,7 @@ public class Manager_DAO {
 	       }
 	   }
 	   
+		// 5. 회원 이름 검색
 	   public void searchMemberByName(String nameKeyword) {
 	       Connection conn = null;
 	       PreparedStatement pstmt = null;
