@@ -225,6 +225,33 @@ public class Customer_DAO {
 
     // 고객 예약 수정
     public boolean updateReservationDates(int reservationId, Date newCheckIn, Date newCheckOut) {
+        // 예약 수정 전에 중복 예약 날짜 체크
+        String checkAvailabilityQuery = "SELECT COUNT(*) FROM RESERVATION "
+                + "WHERE ROOMNUMBER = (SELECT ROOMNUMBER FROM RESERVATION WHERE RESERVATIONID = ?) "
+                + "AND RESERVATIONID != ? "
+                + "AND (CHECKINDATE BETWEEN ? AND ? OR CHECKOUTDATE BETWEEN ? AND ?)";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement checkStmt = conn.prepareStatement(checkAvailabilityQuery)) {
+            checkStmt.setInt(1, reservationId);
+            checkStmt.setInt(2, reservationId);
+            checkStmt.setDate(3, newCheckIn);
+            checkStmt.setDate(4, newCheckOut);
+            checkStmt.setDate(5, newCheckIn);
+            checkStmt.setDate(6, newCheckOut);
+            
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                // 예약 날짜가 겹치는 경우
+                System.out.println("	❌ 날짜가 이미 다른 예약과 겹칩니다. ❌");
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        
+        // 날짜가 겹치지 않으면 예약 수정 진행
         String sql = "UPDATE RESERVATION SET CHECKINDATE = ?, CHECKOUTDATE = ? WHERE RESERVATIONID = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setDate(1, newCheckIn);

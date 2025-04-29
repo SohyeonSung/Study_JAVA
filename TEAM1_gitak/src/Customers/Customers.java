@@ -80,7 +80,7 @@ public class Customers {
                         Date newOut = Date.valueOf(sc.nextLine());
 
                         boolean updated = customerDAO.updateReservationDates(updateResId, newIn, newOut);
-                        System.out.println(updated ? "	✅ 수정 완료" : "	❌ 수정 실패");
+                        System.out.println(updated ? "	✅ 수정 완료" : "	❌ 수정 실패 ❌");
 
                         if (updated) {
                         	System.out.println("");
