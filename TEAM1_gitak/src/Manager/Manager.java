@@ -19,7 +19,7 @@ public class Manager {
 
 	    if (managerDAO.login(managerId, password)) {
         	System.out.println("");
-	        System.out.println("	✅ 로그인 성공 ✅ ");
+	        System.out.println("	✅ 로그인 성공 ✅ " + " 환영합니다 관리자님 " );
 	        System.out.println("	──────────────────────────────────────");
 
 	        while (true) {
@@ -34,6 +34,8 @@ public class Manager {
 	            System.out.println(" 	5. 💰 일매출 조회");
 	            System.out.println("	6. 💰 월매출 조회");
 	            System.out.println("	7. 💰 기간별 매출 조회");
+	            System.out.println("	8. 👤 전체 회원 목록 보기");
+	            System.out.println("	9. 🔍 회원 이름으로 검색");
 	            System.out.println("	0. 🚪 종료");
 	            System.out.println("	━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 	            System.out.print("	➡️  ");
@@ -81,12 +83,22 @@ public class Manager {
 	                       Date endDate = Date.valueOf(endDateStr);
 	                       int periodSales = Manager_DAO.getSalesBetweenDates2(startDate, endDate);
 	                       System.out.println("   💰 기간별 매출: " + periodSales + "원");
+	                       break;    
+	                case 8: // 전체 회원 목록 조회
+	                       managerDAO.getAllMembers();
 	                       break;
+
+	                case 9: // 회원 이름으로 검색
+	                	   System.out.println("");
+	                       System.out.print("	🔍 검색할 이름: ");
+	                       String searchName = sc.nextLine();
+	                       managerDAO.searchMemberByName(searchName);
+	                       break;          
 	                case 0: // 종료
 	                       System.out.println("	👋 관리자 프로그램 종료");
 	                       System.out.println("");
 	                       return;
-	                   default:
+	                default:
 	                       System.out.println("   ❗ 잘못된 입력입니다.");
 	                       System.out.println("");
 	               }

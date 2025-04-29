@@ -30,21 +30,25 @@ public class Customer_DAO {
             e.printStackTrace();
         }
     }
-    
-    
-    // 고객 로그인 기능
-    public boolean login(String custId, String password) {
+
+ // 고객 로그인 기능 (회원 이름 반환)
+    public String login(String custId, String password) {
         String sql = "SELECT * FROM CUSTOMERS WHERE CUSTID = ? AND PASSWORD = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, custId);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
-            return rs.next(); // 로그인 성공 여부
+            
+            if (rs.next()) {
+                return rs.getString("customerName"); 
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return null; // 로그인 실패 시 null 반환
     }
+
+
 
     // 고객 예약 생성 기능
     public boolean createReservation(String custId, int roomNumber, Date checkIn, Date checkOut) {
@@ -203,9 +207,14 @@ public class Customer_DAO {
                 int totalPrice = (int) (daysBetween * pricePerNight);
 
                 // 예약 정보 추가
-                reservations.add("	예약번호: " + reservationId + ", 방 번호: " + roomNumber + 
-                                 ", 체크인: " + checkInDate + ", 체크아웃: " + checkOutDate + 
-                                 ", 1박 가격: " + pricePerNight + "원, 총 가격: " + totalPrice + "원");
+                reservations.add(String.format("	╔══════════════════════════════════════════════════════════════════════════╗"));
+                reservations.add(String.format("	║ 예약번호: %-6s │ 방 번호: %-6s │ 체크인: %-10s │ 체크아웃: %-10s  ║", 
+                                                reservationId, roomNumber, checkInDate, checkOutDate));
+                reservations.add(String.format("	╠══════════════════════════════════════════════════════════════════════════╣"));
+                reservations.add(String.format("	║ 1박 가격: %-10s │ 총 가격: %-12s                                ║", 
+                                                String.format("%,d", pricePerNight), String.format("%,d", totalPrice)));
+                reservations.add(String.format("	╚══════════════════════════════════════════════════════════════════════════╝"));
+
             }
         } catch (SQLException e) {
             e.printStackTrace();

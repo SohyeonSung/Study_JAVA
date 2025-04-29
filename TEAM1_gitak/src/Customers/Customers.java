@@ -10,15 +10,19 @@ public class Customers {
     public void runCustomer() {
         Scanner sc = new Scanner(System.in);
         Customer_DAO customerDAO = new Customer_DAO();
-	    Room_DAO roomDAO = new Room_DAO(); 
+        Room_DAO roomDAO = new Room_DAO();
 
         System.out.print("	- 고객 ID: ");
         String custId = sc.nextLine();
         System.out.print("	- 비밀번호: ");
         String password = sc.nextLine();
 
-        if (customerDAO.login(custId, password)) {
-            System.out.println("	✅ 로그인 성공 ✅ ");
+        // 로그인 시 회원 이름을 받아옴
+        String customerName = customerDAO.login(custId, password);
+        
+        if (customerName != null) { // 로그인 성공시
+            System.out.println("	✅ 로그인 성공 ✅ 환영합니다 " + customerName +"님!!");
+
 
             while (true) {
             	System.out.println("");

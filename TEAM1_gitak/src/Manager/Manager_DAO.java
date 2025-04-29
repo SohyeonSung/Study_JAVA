@@ -121,6 +121,73 @@ public class Manager_DAO {
 	    return totalSales;
 	}
 
+	// 4. 회원 목록 조회
+	public void getAllMembers() {
+	       Connection conn = null;
+	       PreparedStatement pstmt = null;
+	       ResultSet rs = null;
+
+	       try {
+	           conn = DBUtil.getConnection();
+	           String sql = "SELECT CUSTID, CUSTOMERNAME, PASSWORD FROM CUSTOMERS ORDER BY CUSTOMERNAME";
+	           pstmt = conn.prepareStatement(sql);
+	           rs = pstmt.executeQuery();
+
+	           System.out.println("	👤 [전체 회원 목록]");
+	           System.out.println("──────────────────────────────");
+	           while (rs.next()) {
+	               String id = rs.getString("CUSTID");
+	               String name = rs.getString("CUSTOMERNAME");
+	               
+
+	               System.out.println("	ID: " + id + " | 이름: " + name);
+	           }
+	           System.out.println("	──────────────────────────────");
+
+	       } catch (SQLException e) {
+	           System.out.println("	⚠️ 회원 목록 조회 오류: " + e.getMessage());
+	       } finally {
+	           DBUtil.close(rs, pstmt, conn);
+	       }
+	   }
+	   
+	   public void searchMemberByName(String nameKeyword) {
+	       Connection conn = null;
+	       PreparedStatement pstmt = null;
+	       ResultSet rs = null;
+
+	       try {
+	           conn = DBUtil.getConnection();
+	           String sql = "SELECT CUSTID, CUSTOMERNAME, PASSWORD FROM CUSTOMERS WHERE CUSTOMERNAME LIKE ?";
+	           pstmt = conn.prepareStatement(sql);
+	           pstmt.setString(1, "%" + nameKeyword + "%");  // 부분 일치 검색
+	           rs = pstmt.executeQuery();
+
+	           System.out.println("	🔍 [이름 검색 결과]");
+	           System.out.println("	──────────────────────────────");
+	           boolean found = false;
+	           while (rs.next()) {
+	               found = true;
+	               String id = rs.getString("CUSTID");
+	               String name = rs.getString("CUSTOMERNAME");
+	               
+
+	               System.out.println("	ID: " + id + " | 이름: " + name);
+	           }
+
+	           if (!found) {
+	               System.out.println("	❌ 검색된 회원이 없습니다.");
+	           }
+	           System.out.println("	──────────────────────────────");
+
+	       } catch (SQLException e) {
+	           System.out.println("	⚠️ 이름 검색 오류: " + e.getMessage());
+	       } finally {
+	           DBUtil.close(rs, pstmt, conn);
+	       }
+	   }
+	
+	
 	// 연결 자원 반환 메서드
 	private static void closeResources(ResultSet rs, PreparedStatement pstmt, Connection conn) {
 	    try {
